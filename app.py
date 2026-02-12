@@ -1,14 +1,20 @@
-import os
-from google import genai
+import streamlit as st
+from model import gemini_llm
  
-client = genai.Client(api_key = os.getenv("GEMINI_API_KEY"))
+st.title("Gemini LLM")
+st.subheader("Generate Content with Gemini API LLM")
  
-def gemini_llm(content):
-    response = client.models.generate_content(
-        model="gemini-3-flash-preview",
-        contents = content
-    )
-    return response.text
- 
+user_input = st.text_area(
+    "Enter your prompt.. ",
+    placeholder="What is Gemini?"
+)
  
  
+if st.button("Generate Content"):
+    if user_input.strip() == "":
+        st.warning("Enter valid prompt!!")
+    else:
+        with st.spinner("Generating Content"):
+            answer = gemini_llm(user_input)
+            st.success("Generated Content!")
+            st.write(answer)
